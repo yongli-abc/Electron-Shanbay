@@ -5,31 +5,46 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <!--Import Google Icon Font-->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <!--Import materialize.css-->
+    <link rel="stylesheet" href="../css/materialize.min.css">
     <title>扇贝桌面版</title>
 </head>
 <body>
-    <div id="app">
-        <div>
-            扇贝桌面版
+    <div id="app" class="container">
+        <div clsas="row">
+            <div class="col s12">
+                <h3><center>扇贝桌面版</center></h3>
+            </div>
         </div>
 
-        <div id ="search-bar">
-            <input type="text" v-model:value="searchWord" @keyup.enter="onEnter">
-            <button v-on:click="onSearch" id="search-btn">搜索</button>
+        <div class="divider"></div>
+
+        <div id ="search-bar" class="row section">
+            <div class="col s8 input-field">
+                <input placeholder="输入……" type="text" id="search-word" v-model:value="searchWord" @keyup.enter="onEnter">
+                <label for="search-word" class="#90caf9 blue-text lighten-3">查询单词</label>
+            </div>
+            <div class="col s4">
+                <button class="waves-effect waves-light btn" v-on:click="onSearch" id="search-btn">搜索</button>
+            </div>
         </div>
 
         <!-- Init view when app is just opened -->
-        <div id="init-view" v-if="view==='initView'">
-            欢迎使用扇贝桌面版！
+        <div id="init-view" v-if="view==='initView'" class="row">
+            <div class="col s12">
+                <center>欢迎使用扇贝桌面版！</center>
+            </div>
         </div>
 
         <!-- When waiting for the request response -->
-        <div id="load-view" v-if="view==='loadView'">
+        <div id="load-view" v-if="view==='loadView'" clsas="row">
             加载中……
         </div>
 
         <!-- Word can be successfully found -->
-        <div id="word-view" v-if="view==='wordView'">
+        <div id="word-view" v-if="view==='wordView'" class="row">
             <!-- Word -->
             <div>
                 <span>{{ word.content }}</span>
@@ -91,7 +106,7 @@
         </div>
 
         <!-- When something goes wrong -->
-        <div id="error-view" v-if="view==='errorView'">
+        <div id="error-view" v-if="view==='errorView'" class="row">
             <div>
                 嗯……似乎出现了问题：
             </div>

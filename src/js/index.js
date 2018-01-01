@@ -60,7 +60,7 @@ Promise.all([loadVueP])
     app = new Vue({
         el: "#app",
         data: {
-            searchWord: "查询",
+            searchWord: null,
             view: k_view.init,
             word: {
                 content: null,
