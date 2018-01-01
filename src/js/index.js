@@ -56,14 +56,14 @@ new Promise(function(res, rej) {
                     en: null,
                 }
             },
-            errorMsg: null
+            error: null
         },
         methods: {
             /*
              * The search button is clicked.
              * Initiate the search.
              */
-            search: function() {
+            onSearch: function() {
                 console.log("Search button clicked.");
 
                 let options = {
@@ -100,7 +100,7 @@ new Promise(function(res, rej) {
                         
                         this.view = k_view.word;
                     } else {
-                        this.errorMsg = {
+                        this.error = {
                             status_code: _.get(res, "status_code", "unknown status code"),
                             msg: _.get(res, "msg", "unknown msg")
                         };
@@ -111,6 +111,9 @@ new Promise(function(res, rej) {
                 .catch(function(err) {
                     console.log("ERROR: failed to send request for searching word, ", err);
                 })
+            },
+            onEnter: function() {
+                document.getElementById("search-btn").click();
             }
         }
     });

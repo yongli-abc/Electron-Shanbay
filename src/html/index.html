@@ -14,18 +14,18 @@
         </div>
 
         <div id ="search-bar">
-            <input type="text" v-model:value="searchWord">
-            <button v-on:click="search">搜索</button>
+            <input type="text" v-model:value="searchWord" @keyup.enter="onEnter">
+            <button v-on:click="onSearch" id="search-btn">搜索</button>
         </div>
 
         <!-- Init view when app is just opened -->
         <div id="init-view" v-if="view==='initView'">
-            Welcome!
+            欢迎使用扇贝桌面版！
         </div>
 
         <!-- When waiting for the request response -->
         <div id="load-view" v-if="view==='loadView'">
-            Loading...
+            加载中……
         </div>
 
         <!-- Word can be successfully found -->
@@ -92,8 +92,12 @@
 
         <!-- When something goes wrong -->
         <div id="error-view" v-if="view==='errorView'">
-            Ah, something is wrong!
-            <p>{{ errorMsg }}</p>
+            <div>
+                嗯……似乎出现了问题：
+            </div>
+            <div>
+                {{ error.msg }}
+            </div>
         </div>
     </div>
     <script src="../js/index.js"></script>
