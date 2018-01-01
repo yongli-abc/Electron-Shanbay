@@ -1,0 +1,25 @@
+{
+  "name": "electron-shanbay",
+  "version": "1.0.0",
+  "description": "A desktop Shanbay client implemented in electron.",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron ."
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/NeilLi1992/Electron-Shanbay.git"
+  },
+  "author": "Yong Li",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/NeilLi1992/Electron-Shanbay/issues"
+  },
+  "homepage": "https://github.com/NeilLi1992/Electron-Shanbay#readme",
+  "dependencies": {
+    "electron": "^1.7.10",
+    "lodash": "^4.17.4",
+    "request": "^2.83.0",
+    "request-promise-native": "^1.0.5"
+  }
+}

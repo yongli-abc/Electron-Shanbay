@@ -1,0 +1,101 @@
+<!-- The main window -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>扇贝桌面版</title>
+</head>
+<body>
+    <div id="app">
+        <div>
+            扇贝桌面版
+        </div>
+
+        <div id ="search-bar">
+            <input type="text" v-model:value="searchWord">
+            <button v-on:click="search">搜索</button>
+        </div>
+
+        <!-- Init view when app is just opened -->
+        <div id="init-view" v-if="view==='initView'">
+            Welcome!
+        </div>
+
+        <!-- When waiting for the request response -->
+        <div id="load-view" v-if="view==='loadView'">
+            Loading...
+        </div>
+
+        <!-- Word can be successfully found -->
+        <div id="word-view" v-if="view==='wordView'">
+            <!-- Word -->
+            <div>
+                <span>{{ word.content }}</span>
+                <span>{{ word.pronunciations.uk }}</span>
+                <span>{{ word.pronunciations.us }}</span>
+            </div>
+
+            <br>
+    
+            <!-- Explanation -->
+            <div>
+                <div>中文解释</div>
+                <span>{{ word.explanations.cn.defn }}</span>
+            </div>
+
+            <br>
+
+            <div>
+                <div>英文解释</div>
+
+                <div v-for="(expArr, pos) in word.explanations.en">
+                    <span>{{ pos }}</span>
+                    <div v-for="(exp, idx) in expArr">
+                        <span>{{ idx+1 }}. {{ exp }}</span>
+                    </div>
+                    <br>
+                </div>
+            </div>
+    
+            <br>
+
+            <!-- Examples -->
+            <!-- <div>
+                <span>例句</span>
+                <span>
+                    1
+                    Hello, is there anybody there?
+                    喂，那里有人吗？
+                    2
+                    Hello John, how are you?
+                    哈罗，约翰，你好吗？
+                </span>
+            </div>
+
+            <br> -->
+    
+            <!-- Notes -->
+            <!-- <div>
+                <span>笔记</span>
+                <span>
+                    1Hello
+                    作者 mobile_99c6ef8e33
+                    2condescend vi. 屈尊
+                    作者 Evillight
+                    3he 丨丨 0
+                    作者 wechat_ze8pb00t
+                </span>
+            </div> -->
+        </div>
+
+        <!-- When something goes wrong -->
+        <div id="error-view" v-if="view==='errorView'">
+            Ah, something is wrong!
+            <p>{{ errorMsg }}</p>
+        </div>
+    </div>
+    <script src="../js/index.js"></script>
+</body>
+</html>
