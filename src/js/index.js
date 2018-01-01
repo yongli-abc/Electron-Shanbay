@@ -4,31 +4,59 @@ console.log("node_env=", process.env.NODE_ENV);
 var rp = require("request-promise-native");
 var _ = require("lodash");
 
-// load vue.js according to environment
-const vuePath = process.env.NODE_ENV === "development" ?
-                "../js/vue.dev.js" :
-                "../js/vue.min.js";
-
-const vueScript = document.createElement("script");
-vueScript.src = vuePath;
-document.body.appendChild(vueScript);
+// fixing electron issue
+window.$ = window.jQuery = require('../js/jquery-3.2.1.min.js');
+window.Hammer = require('../js/hammer.min.js');
 
 const k_view = Object.freeze({
     init: "initView",
     word: "wordView",
     load: "loadView",
     error: "errorView"
-})
+});
 
 let app = null; // global reference to the vue app,
                 // so we can access it from devTool
 
-new Promise(function(res, rej) {
-    vueScript.onload = res;
-})
-.then(function() {
-    console.log("loaded:" + vuePath);
+// Load different scripts
+// !! Order is important: jquery goes before materialize
+let k_paths = {
+    prod: {
+        vue: "../js/vue.min.js",
+        // jquery: "../js/jquery-3.2.1.min.js",
+        // materialize: "../js/materialize.min.js"
+    },
+    dev: {
+        vue: "../js/vue.dev.js",
+        // jquery: "../js/jquery-3.2.1.js",
+        // materialize: "../js/materialize.js"
+    }
+};
+k_paths = process.env.NODE_ENV === "development" ? k_paths.dev : k_paths.prod;
 
+/*
+ * Get a promise for loading the script file.
+ * @param {String} path The path to the script file.
+ * @return {Promise} The promise object.
+ */
+function getLoadingP(path) {
+    let el = document.createElement("script");
+    el.src = path;
+    document.body.appendChild(el);
+    return new Promise(function(res, rej) {
+        el.onload = res;
+    });
+}
+
+const loadVueP = getLoadingP(k_paths.vue);
+// This part somehow doesnt' work.
+// const loadJqueryP = getLoadingP(k_paths.jquery);
+// const loadMaterializeP = loadJqueryP.then(function() {
+//     return getLoadingP(k_paths.materialize);
+// });
+
+Promise.all([loadVueP])
+.then(function() {
     app = new Vue({
         el: "#app",
         data: {
@@ -112,6 +140,9 @@ new Promise(function(res, rej) {
                     console.log("ERROR: failed to send request for searching word, ", err);
                 })
             },
+            /*
+             * 
+             */
             onEnter: function() {
                 document.getElementById("search-btn").click();
             }
