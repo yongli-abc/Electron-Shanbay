@@ -57,6 +57,12 @@ const loadVueP = getLoadingP(k_paths.vue);
 
 Promise.all([loadVueP])
 .then(function() {
+    let scrollHeight = parseFloat($("#app").css("height")) -
+                       parseFloat($("#search-bar").css("height")) -
+                       parseFloat($("#index-banner").css("height"));
+    scrollHeight = Math.ceil(scrollHeight);
+    $("#scroll-view").css("height", scrollHeight + "px");
+
     app = new Vue({
         el: "#app",
         data: {
@@ -87,12 +93,17 @@ Promise.all([loadVueP])
             error: null
         },
         methods: {
+            onFocus: function() {
+                $("#search-word").removeClass("valid")
+                                 .removeClass("invalid");
+            },
             /*
              * The search button is clicked.
              * Initiate the search.
              */
             onSearch: function() {
                 console.log("Search button clicked.");
+                $("#search-word").blur();
 
                 let options = {
                     url: "https://api.shanbay.com/bdc/search/",
@@ -120,18 +131,22 @@ Promise.all([loadVueP])
 
                         // tweaking
                         if (this.word.pronunciations.uk && this.word.pronunciations.uk !== "") {
-                            this.word.pronunciations.uk = "/" + this.word.pronunciations.uk + "/";
+                            this.word.pronunciations.uk = "🇬🇧 /" + this.word.pronunciations.uk + "/";
                         }
                         if (this.word.pronunciations.us && this.word.pronunciations.us !== "") {
-                            this.word.pronunciations.us = "/" + this.word.pronunciations.us + "/";
+                            this.word.pronunciations.us = "🇺🇸 /" + this.word.pronunciations.us + "/";
                         }
                         
+                        console.log("will add valid");
+                        $("#search-word").addClass("valid");
                         this.view = k_view.word;
                     } else {
                         this.error = {
                             status_code: _.get(res, "status_code", "unknown status code"),
                             msg: _.get(res, "msg", "unknown msg")
                         };
+
+                        $("#search-word").addClass("invalid");
                         this.view = k_view.error;
                     }
                     

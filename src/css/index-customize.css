@@ -2,3 +2,11 @@
     margin-bottom: 0em;
     padding-bottom: 0em;
 }
+
+span.pos-label {
+    border-radius: 2.5px;
+    color: #fff;
+    background-color: #26a69a;
+    display: inline-block;
+    padding: 0 0.8em;
+}

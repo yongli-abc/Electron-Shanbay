@@ -15,7 +15,7 @@
 </head>
 <body>
     <div id="app" class="container">
-        <div clsas="row">
+        <div id="index-banner" clsas="row">
             <div class="col s12">
                 <h3><center>扇贝桌面版</center></h3>
             </div>
@@ -24,105 +24,120 @@
         <div class="divider"></div>
 
         <div id ="search-bar" class="row section">
-            <div class="col s8 input-field">
-                <input placeholder="输入……" type="text" id="search-word" v-model:value="searchWord" @keyup.enter="onEnter">
-                <label for="search-word" class="#90caf9 blue-text lighten-3">查询单词</label>
+            <div class="col s8 input-field" novalidate>
+                <input placeholder="输入……" type="text" id="search-word" v-model:value="searchWord" @keyup.enter="onEnter"
+                       class="validate" @focus="onFocus">
+                <label for="search-word" class="#90caf9 blue-text lighten-3" data-error="再试一次">查询单词</label>
             </div>
             <div class="col s4">
                 <button class="waves-effect waves-light btn" v-on:click="onSearch" id="search-btn">搜索</button>
             </div>
         </div>
 
-        <!-- Init view when app is just opened -->
-        <div id="init-view" v-if="view==='initView'" class="row">
-            <div class="col s12">
-                <h5><center>欢迎使用扇贝桌面版！</center></h5>
-            </div>
-        </div>
-
-        <!-- When waiting for the request response -->
-        <div id="load-view" v-if="view==='loadView'" clsas="row">
-            <div class="col s12">
-                <h5>
-                    <center>
-                        加载中……
-                    </center>
-                </h5>
-            </div>
-        </div>
-
-        <!-- Word can be successfully found -->
-        <div id="word-view" v-if="view==='wordView'" class="row">
-            <!-- Word -->
-            <div class="col s12">
-                <span>
-                    <font size="6">{{ word.content }}</font>
-                    <!-- <h4>  </h4> -->
-                </span>
-                <span>{{ word.pronunciations.uk }}</span>
-                <span>{{ word.pronunciations.us }}</span>
-            </div>
-
-            <br>
-    
-            <!-- Explanation -->
-            <div>
-                <div>中文解释</div>
-                <span>{{ word.explanations.cn.defn }}</span>
-            </div>
-
-            <br>
-
-            <div>
-                <div>英文解释</div>
-
-                <div v-for="(expArr, pos) in word.explanations.en">
-                    <span>{{ pos }}</span>
-                    <div v-for="(exp, idx) in expArr">
-                        <span>{{ idx+1 }}. {{ exp }}</span>
-                    </div>
-                    <br>
+        <div id="scroll-view" style="overflow-y: scroll; height: 400px;">
+            <!-- Init view when app is just opened -->
+            <div id="init-view" v-if="view==='initView'" class="row">
+                <div class="col s12">
+                    <h5><center>欢迎使用扇贝桌面版！</center></h5>
                 </div>
             </div>
     
-            <br>
-
-            <!-- Examples -->
-            <!-- <div>
-                <span>例句</span>
-                <span>
-                    1
-                    Hello, is there anybody there?
-                    喂，那里有人吗？
-                    2
-                    Hello John, how are you?
-                    哈罗，约翰，你好吗？
-                </span>
+            <!-- When waiting for the request response -->
+            <div id="load-view" v-if="view==='loadView'" clsas="row">
+                <div class="col s12">
+                    <h5>
+                        <center>
+                            加载中……
+                        </center>
+                    </h5>
+                </div>
             </div>
-
-            <br> -->
     
-            <!-- Notes -->
-            <!-- <div>
-                <span>笔记</span>
-                <span>
-                    1Hello
-                    作者 mobile_99c6ef8e33
-                    2condescend vi. 屈尊
-                    作者 Evillight
-                    3he 丨丨 0
-                    作者 wechat_ze8pb00t
-                </span>
-            </div> -->
-        </div>
-
-        <!-- When something goes wrong -->
-        <div id="error-view" v-if="view==='errorView'" class="row">
-            <div>
-                嗯……似乎出现了问题：
+            <!-- Word can be successfully found -->
+            <div id="word-view" v-if="view==='wordView'">
+                <!-- Word -->
+                <div class="row">
+                    <div class="col s12">
+                        <span>
+                            <font size="6">{{ word.content }}</font>
+                            <!-- <h4>  </h4> -->
+                        </span>
+                        <span>{{ word.pronunciations.uk }}</span>
+                        <span>{{ word.pronunciations.us }}</span>
+                    </div>
+                </div>
+    
+                <!-- Explanation -->
+                <div class="row">
+                    <div class="col s12">
+                        <blockquote>
+                            中文解释
+                        </blockquote>
+                        <p>{{ word.explanations.cn.defn }}</p>
+                    </div>
+                </div>
+    
+                <div class="row">
+                    <div class="col s12">
+                        <blockquote>
+                            英文解释
+                        </blockquote>
+        
+                        <div v-for="(expArr, pos) in word.explanations.en">
+                            <span class="pos-label">{{ pos }}</span>
+                            <div v-for="(exp, idx) in expArr">
+                                <p>{{ idx+1 }}. {{ exp }}</p>
+                            </div>
+                            <br>
+                        </div>
+                    </div>
+                </div>
+        
+                <br>
+    
+                <!-- Examples -->
+                <!-- <div>
+                    <span>例句</span>
+                    <span>
+                        1
+                        Hello, is there anybody there?
+                        喂，那里有人吗？
+                        2
+                        Hello John, how are you?
+                        哈罗，约翰，你好吗？
+                    </span>
+                </div>
+    
+                <br> -->
+        
+                <!-- Notes -->
+                <!-- <div>
+                    <span>笔记</span>
+                    <span>
+                        1Hello
+                        作者 mobile_99c6ef8e33
+                        2condescend vi. 屈尊
+                        作者 Evillight
+                        3he 丨丨 0
+                        作者 wechat_ze8pb00t
+                    </span>
+                </div> -->
             </div>
-            <div>
-                {{ error.msg }}
+    
+            <!-- When something goes wrong -->
+            <div id="error-view" v-if="view==='errorView'" class="row section">
+                <div class="col s12">
+                    <div>
+                        <h6>
+                            嗯……似乎出现了问题：
+                        </h6>
+                    </div>
+                    <div>
+                        <h6>
+                            {{ error.msg }}
+                        </h6>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
