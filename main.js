@@ -33,7 +33,7 @@ let forceQuit = false;
 function createMainWindow() {
     wins[k_winNames.main] = new BrowserWindow({
         width: 800,
-        height: 600,
+        height: 620,
         title: ""
     });
     let win = wins[k_winNames.main];
