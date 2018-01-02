@@ -31,7 +31,11 @@ let forceQuit = false;
  * Create the main window
  */
 function createMainWindow() {
-    wins[k_winNames.main] = new BrowserWindow({width: 800, height: 600});
+    wins[k_winNames.main] = new BrowserWindow({
+        width: 800,
+        height: 600,
+        title: ""
+    });
     let win = wins[k_winNames.main];
 
     // don't close the window, unless it's forced to quit
