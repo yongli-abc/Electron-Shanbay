@@ -95,6 +95,15 @@ function createMainWindow() {
         }
     ];
 
+    if (process.env.NODE_ENV === "development") {
+        menuTemplate.push({
+            label: "Dev",
+            submenu: [
+                { label: "DevTool", role: "toggledevtools" }
+            ]
+        })
+    }
+
     if (process.platform === "darwin") {
         menuTemplate.unshift({
             label: app.getName(),
@@ -135,8 +144,6 @@ function createMainWindow() {
             slashes: true
         }
     ));
-
-    win.webContents.openDevTools();
 }
 
 app.on("ready", function() {
