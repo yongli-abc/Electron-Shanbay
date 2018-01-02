@@ -1,4 +1,4 @@
-const {app, BrowserWindow, Menu} = require("electron");
+const {app, BrowserWindow, Menu, Tray} = require("electron");
 const path = require("path");
 const url = require("url");
 
@@ -34,7 +34,8 @@ function createMainWindow() {
     wins[k_winNames.main] = new BrowserWindow({
         width: 800,
         height: 620,
-        title: ""
+        title: "",
+        icon: path.join(__dirname, "icons/app/icon16.png"),
     });
     let win = wins[k_winNames.main];
 
@@ -150,9 +151,22 @@ function createMainWindow() {
     ));
 }
 
+let tray = null; // keep global reference
+function createTray() {
+    console.log("creating tray");
+    tray = new Tray(path.join(__dirname, "icons/app/icon-bw16.png"));
+
+    tray.setToolTip("扇贝桌面版");
+
+    tray.on("click", function(e, bounds) {
+        console.log("hello");
+    });
+}
+
 app.on("ready", function() {
     console.log("app received ready");
     createMainWindow();
+    createTray();
 });
 
 /*
