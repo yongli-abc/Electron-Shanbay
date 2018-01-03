@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <!--Import Google Icon Font-->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <!--Import materialize.css-->
+    <link rel="stylesheet" href="../css/materialize.min.css">
+    <!--Import customize.css -->
+    <link rel="stylesheet" href="../css/tray-customize.css">
+    <title>Document</title>
+</head>
+<body class="#ffffff white">
+    <div id="app" class="container">
+        <div class="input-field col s12">
+            <input placeholder="输入……" type="text" id="search-input"
+                   @keyup.enter="onEnter">
+        </div>
+    </div>
+
+    <script src="../js/tray.js"></script>
+    <script src="../js/materialize.min.js"></script>
+</body>
+</html>

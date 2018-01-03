@@ -24,7 +24,7 @@
 
         <div id ="search-bar" class="row section">
             <div class="col s8 input-field" novalidate>
-                <input placeholder="输入……" type="text" id="search-word" v-model:value="searchWord" @keyup.enter="onEnter"
+                <input type="text" id="search-word" v-model:value="searchWord" @keyup.enter="onEnter"
                        class="validate" @focus="onFocus">
                 <label for="search-word" class="#90caf9 blue-text lighten-3" data-error="再试一次">查询单词</label>
             </div>

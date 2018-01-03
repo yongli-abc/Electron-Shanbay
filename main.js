@@ -19,7 +19,8 @@ const k_winNames = Object.freeze({
  * Paths to html files
  */
 const k_viewPaths = Object.freeze({
-    index: "src/html/index.html"
+    index: "src/html/index.html",
+    tray: "src/html/tray.html"
 });
 
 /*
@@ -55,13 +56,6 @@ function createMainWindow() {
         wins[k_winNames.main] = null;
         win = null;
     });
-
-    win.onbeforeunload = (e) => {
-        console.log("main window received onbeforeunload")
-        e.returnValue = false;
-        e.preventDefault();
-        return false;
-    };
 
     // create the menu
     const menuTemplate = [
@@ -144,9 +138,11 @@ function createMainWindow() {
 
     const menu = Menu.buildFromTemplate(menuTemplate)
     Menu.setApplicationMenu(menu)
+    menu.on("click", function() {
+        console.log("Menu clicked");
+    });
 
-    win.loadURL(url.format(
-        {
+    win.loadURL(url.format({
             pathname: path.join(__dirname, k_viewPaths.index),
             protocol: "file:",
             slashes: true
@@ -160,9 +156,10 @@ function createMainWindow() {
  */
 function createTrayWindow(e, bounds) {
     console.log(bounds);
-    wins[k_winNames.tray] = new BrowserWindow({
-        width: 300,
-        height: 100,
+
+    let option = {
+        width: 200,
+        height: 70,
         title: "",
         type: "textured",
         resizable: false,
@@ -173,8 +170,23 @@ function createTrayWindow(e, bounds) {
         frame: false,
         x: bounds.x,
         y: bounds.y + bounds.height
-    });
+    };
+
+    if (process.env.NODE_ENV === "development") {
+        option.resizable = true;
+        // option.width = option.width * 3;
+        // option.height = option.height * 3;
+        option.x = 0;
+    }
+
+    wins[k_winNames.tray] = new BrowserWindow(option);
     let win = wins[k_winNames.tray];
+
+    win.loadURL(url.format({
+        pathname: path.join(__dirname, k_viewPaths.tray),
+        protocol: "file:",
+        slashes: true
+    }));
 
     win.on("closed", () => {
         console.log("tray window received closed");
@@ -185,7 +197,7 @@ function createTrayWindow(e, bounds) {
     // close popup window when it loses focus
     win.on("blur", () => {
         console.log("tray window received blur");
-        win.close();
+        win.hide();
     });
 
     win.on("ready-to-show", () => {
@@ -208,7 +220,11 @@ function createTray() {
             createTrayWindow(e, bounds);
         
         } else {
-            wins[k_winNames.tray].close();
+            if (wins[k_winNames.tray].isVisible()) {
+                wins[k_winNames.tray].hide();
+            } else {
+                wins[k_winNames.tray].show();
+            }
         }
     });
 }

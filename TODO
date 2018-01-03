@@ -4,6 +4,11 @@ Todo:
   ✔ Use enter key to trigger the search @done(18-01-01 21:20)
   ✔ Select-all in search box @done(18-01-01 19:19)
   ✔ Style up @done(18-01-02 22:37)
+  [ ] Tray window
+    [ ] html skeleton
+    [ ] implement word search functionality
+    [ ] style up
+    [ ] use accelerator to display the tray window
   [ ] Add icon
   [ ] shortcut to open the window
   [ ] Add 例句
