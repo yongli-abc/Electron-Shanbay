@@ -11,7 +11,8 @@ process.env.NODE_ENV = "development"
  * Window names enumerations
  */
 const k_winNames = Object.freeze({
-    main: "mainWindow"
+    main: "mainWindow",
+    tray: "trayWindow"
 });
 
 /*
@@ -109,7 +110,9 @@ function createMainWindow() {
         })
     }
 
-    if (process.platform === "darwin") {
+    if (process.platform
+        
+        === "darwin") {
         menuTemplate.unshift({
             label: app.getName(),
             submenu: [
@@ -151,6 +154,47 @@ function createMainWindow() {
     ));
 }
 
+/*
+ * Create the tray popup window
+ * 
+ */
+function createTrayWindow(e, bounds) {
+    console.log(bounds);
+    wins[k_winNames.tray] = new BrowserWindow({
+        width: 300,
+        height: 100,
+        title: "",
+        type: "textured",
+        resizable: false,
+        movable: false,
+        minimizable: false,
+        maximizable: false,
+        skipTaskbar: true,
+        frame: false,
+        x: bounds.x,
+        y: bounds.y + bounds.height
+    });
+    let win = wins[k_winNames.tray];
+
+    win.on("closed", () => {
+        console.log("tray window received closed");
+        wins[k_winNames.tray] = null;
+        win = null;
+    });
+
+    // close popup window when it loses focus
+    win.on("blur", () => {
+        console.log("tray window received blur");
+        win.close();
+    });
+
+    win.on("ready-to-show", () => {
+        console.log("tray window received ready-to-show");
+        win.focus();
+        win.setMenu(null);
+    });
+}
+
 let tray = null; // keep global reference
 function createTray() {
     console.log("creating tray");
@@ -159,7 +203,13 @@ function createTray() {
     tray.setToolTip("扇贝桌面版");
 
     tray.on("click", function(e, bounds) {
-        console.log("hello");
+        if (wins[k_winNames.tray] === undefined ||
+            wins[k_winNames.tray] === null) {
+            createTrayWindow(e, bounds);
+        
+        } else {
+            wins[k_winNames.tray].close();
+        }
     });
 }
 
