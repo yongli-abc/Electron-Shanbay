@@ -1,8 +1,8 @@
 console.log("inside index.js");
 console.log("node_env=", process.env.NODE_ENV);
 
-var rp = require("request-promise-native");
-var _ = require("lodash");
+const path = require("path");
+const util = require(path.join(__dirname, "../js/util.js"));
 
 // fixing electron issue
 window.$ = window.jQuery = require('../js/jquery-3.2.1.min.js');
@@ -104,56 +104,34 @@ Promise.all([loadVueP])
             onSearch: function() {
                 console.log("Search button clicked.");
                 $("#search-word").blur();
-
-                let options = {
-                    url: "https://api.shanbay.com/bdc/search/",
-                    qs: {
-                        word: this.searchWord
-                    },
-                    json: true
-                };
-
-                console.log("Request options: ", options);
-
-                this.view = k_view.load; // temporarily switch to loading view
-                rp(options)
-                .then(function(res) {
-                    console.log("Request response: ", res);
-
-                    // handling response data
-                    if (res.hasOwnProperty("status_code") &&
-                        res.status_code === 0) {
-                        this.word.content = _.get(res, "data.content");
-                        this.word.pronunciations.uk =  _.get(res, "data.pronunciations.uk");
-                        this.word.pronunciations.us = _.get(res, "data.pronunciations.us");
-                        this.word.explanations.cn = _.get(res, "data.cn_definition");
-                        this.word.explanations.en = _.get(res, "data.en_definitions");
-
-                        // tweaking
-                        if (this.word.pronunciations.uk && this.word.pronunciations.uk !== "") {
-                            this.word.pronunciations.uk = "🇬🇧 /" + this.word.pronunciations.uk + "/";
-                        }
-                        if (this.word.pronunciations.us && this.word.pronunciations.us !== "") {
-                            this.word.pronunciations.us = "🇺🇸 /" + this.word.pronunciations.us + "/";
-                        }
-                        
-                        console.log("will add valid");
-                        $("#search-word").addClass("valid");
-                        this.view = k_view.word;
-                    } else {
-                        this.error = {
-                            status_code: _.get(res, "status_code", "unknown status code"),
-                            msg: _.get(res, "msg", "unknown msg")
-                        };
-
-                        $("#search-word").addClass("invalid");
-                        this.view = k_view.error;
-                    }
-                    
-                }.bind(this))
-                .catch(function(err) {
-                    console.log("ERROR: failed to send request for searching word, ", err);
+                
+                let that = this;
+                Promise.resolve()
+                .then(function() {
+                    that.view = k_view.load;
+                    return util.searchWordP(that.searchWord);
                 })
+                .then(function(data) {
+                    console.log("onSearch got data=", data);
+                    that.word = data;
+
+                    // tweaking
+                    if (data.pronunciations.uk && data.pronunciations.uk !== "") {
+                        that.word.pronunciations.uk = "🇬🇧 /" + data.pronunciations.uk + "/";
+                    }
+                    if (data.pronunciations.us && data.pronunciations.us !== "") {
+                        that.word.pronunciations.us = "🇺🇸 /" + data.pronunciations.us + "/";
+                    }
+
+                    $("#search-word").addClass("valid");
+                    that.view = k_view.word;
+                })
+                .catch(function(error) {
+                    console.log("onSearch caught error=", error);
+                    that.error = error;
+                    $("#search-word").addClass("invalid");
+                    that.view = k_view.error;
+                });
             },
             /*
              * 
@@ -163,6 +141,4 @@ Promise.all([loadVueP])
             }
         }
     });
-
-
 });

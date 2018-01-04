@@ -33,17 +33,18 @@ var _ = require("lodash");
  * {String} error.msg The error msg
  */
 function searchWordP(word) {
+    console.log("in searchWordP, word=", word);
     let options = {
         url: "https://api.shanbay.com/bdc/search/",
         qs: {
-            word: this.searchWord
+            word: word
         },
         json: true
     };
 
     console.log("Request options: ", options);
 
-    rp(options)
+    return rp(options)
     .then(function(res) {
         if (res.hasOwnProperty("status_code") &&
             res.status_code === 0) {
@@ -78,3 +79,5 @@ function searchWordP(word) {
         }
     });
 }
+
+exports.searchWordP = searchWordP;
