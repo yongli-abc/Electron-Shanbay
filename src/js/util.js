@@ -80,4 +80,22 @@ function searchWordP(word) {
     });
 }
 
+/*
+ * A function to return a Promise for loading vue script.
+ */
+function loadVueP()
+{
+    let dev_path = "../js/vue.dev.js";
+    let prd_path = "../js/vue.min.js";
+    let path = process.env.NODE_ENV === "development" ? dev_path : prd_path;
+
+    let el = document.createElement("script");
+    el.src = path;
+    document.body.appendChild(el);
+    return new Promise(function(res, rej) {
+        el.onload = res;
+    });
+}
+
 exports.searchWordP = searchWordP;
+exports.loadVueP = loadVueP;
