@@ -25,6 +25,12 @@ var _ = require("lodash");
  * {Object}     data.explanations.en
  * {String}     data.explanations.en.key A PoS
  * {String[]}   data.explanations.en.val An array of explanations for this PoS.
+ * 
+ * 
+ * Error object
+ * {Object} error The error object
+ * {Number} error.status_code The status code
+ * {String} error.msg The error msg
  */
 function searchWordP(word) {
     let options = {
@@ -59,9 +65,16 @@ function searchWordP(word) {
                   _.get(res, "data.en_definitions"));
 
             return data;
-        }
-    })
-    .catch(function(error) {
 
-    })
+        } else {
+            let error = {};
+            _.set(error, "status_code",
+                _.get(res, "status_code", "unknown status code"));
+            
+            _.set(error, "msg",
+                _.get(res, "msg", "unknown msg"));
+            
+            throw error;
+        }
+    });
 }
