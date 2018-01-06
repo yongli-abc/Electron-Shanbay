@@ -6,6 +6,9 @@ const url = require("url");
  * Start in development mode
  */
 process.env.NODE_ENV = "development"
+if (process.env.NODE_ENV !== "development") {
+    console.log = function() {}
+}
 
 /*
  * Window names enumerations

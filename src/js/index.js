@@ -3,6 +3,7 @@ console.log("node_env=", process.env.NODE_ENV);
 
 const path = require("path");
 const util = require(path.join(__dirname, "../js/util.js"));
+const {remote} = require("electron");
 
 // fixing electron issue
 window.$ = window.jQuery = require('../js/jquery-3.2.1.min.js');
@@ -15,17 +16,13 @@ const k_view = Object.freeze({
     error: "errorView"
 });
 
+let win = remote.getCurrentWindow();
+
 let app = null; // global reference to the vue app,
                 // so we can access it from devTool
 
 util.loadVueP()
 .then(function() {
-    let scrollHeight = parseFloat($("#app").css("height")) -
-                       parseFloat($("#search-bar").css("height")) -
-                       parseFloat($("#index-banner").css("height"));
-    scrollHeight = Math.ceil(scrollHeight);
-    $("#scroll-view").css("height", scrollHeight + "px");
-
     app = new Vue({
         el: "#app",
         data: {
