@@ -1,3 +1,28 @@
 body {
     background-color: white;
 }
+
+div#search-bar {
+    margin-top: 0em;
+    height: 50px;
+}
+
+div#word-view p {
+    margin: 5px;
+}
+
+div#error-view p {
+    margin: 5px;
+}
+
+i.spin {
+    animation-name: spin;
+    animation-duration: 2000ms;
+    animation-iteration-count: infinite;
+    animation-timing-function: linear;
+}
+
+@keyframes spin {
+    from {transform:rotate(0deg);}
+    to {transform:rotate(360deg);}
+}

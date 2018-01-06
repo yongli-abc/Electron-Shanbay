@@ -154,11 +154,11 @@ function createMainWindow() {
  * Create the tray popup window
  * 
  */
-function createTrayWindow(e, bounds) {
+function createTrayWindow(bounds) {
     console.log(bounds);
 
     let option = {
-        width: 200,
+        width: 280,
         height: 70,
         title: "",
         type: "textured",
@@ -174,6 +174,7 @@ function createTrayWindow(e, bounds) {
 
     if (process.env.NODE_ENV === "development") {
         option.resizable = true;
+        option.movable = true;
         // option.width = option.width * 3;
         // option.height = option.height * 3;
         option.x = 0;
@@ -205,6 +206,8 @@ function createTrayWindow(e, bounds) {
         win.focus();
         win.setMenu(null);
     });
+
+    win.hide();
 }
 
 let tray = null; // keep global reference
@@ -212,19 +215,20 @@ function createTray() {
     console.log("creating tray");
     tray = new Tray(path.join(__dirname, "icons/app/icon-bw16.png"));
 
+    createTrayWindow(tray.getBounds());
+
     tray.setToolTip("扇贝桌面版");
 
     tray.on("click", function(e, bounds) {
-        if (wins[k_winNames.tray] === undefined ||
-            wins[k_winNames.tray] === null) {
-            createTrayWindow(e, bounds);
-        
+        console.log(bounds);
+        if (wins[k_winNames.tray].isVisible()) {
+            wins[k_winNames.tray].hide();
         } else {
-            if (wins[k_winNames.tray].isVisible()) {
-                wins[k_winNames.tray].hide();
-            } else {
-                wins[k_winNames.tray].show();
-            }
+            let winBounds = wins[k_winNames.tray].getBounds();
+            winBounds.x = bounds.x;
+            winBounds.y = bounds.y + bounds.height;
+            wins[k_winNames.tray].setBounds(winBounds, false);
+            wins[k_winNames.tray].show();
         }
     });
 }

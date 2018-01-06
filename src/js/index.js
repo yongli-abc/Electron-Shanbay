@@ -31,28 +31,7 @@ util.loadVueP()
         data: {
             searchWord: null,
             view: k_view.init,
-            word: {
-                content: null,
-                pronunciations: {
-                    uk: null,
-                    us: null,
-                },
-                explanations: {
-                    /*
-                     * @param {Object} cn The definition object for Chinese explanation.
-                     * @param {String} cn.pos The PoS for Chinese explanation.
-                     * @param {String} cn.defn The explanation string.
-                     */
-                    cn: null,
-
-                    /*
-                     * @param {Object} en An object of English definition
-                     * @param {String} en.key Part of Speech
-                     * @param {String[]} en.val An array of explanations for this PoS
-                     */
-                    en: null,
-                }
-            },
+            word: null,
             error: null
         },
         methods: {

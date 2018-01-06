@@ -13,10 +13,25 @@
     <title>Document</title>
 </head>
 <body class="#ffffff white">
-    <div id="app" class="container">
-        <div class="input-field col s12">
+    <div id="app" class="container" @keyup.esc="onEsc">
+        <div class="input-field" id="search-bar" novalidate>
             <input placeholder="输入……" type="text" id="search-input"
-                   @keyup.enter="onEnter">
+                   @keyup.enter="onSearch" v-model:value="searchWord"
+                   class="validate">
+        </div>
+
+        <div v-if="load" id="load-view">
+            <center>
+                <i class="material-icons spin" id="refresh-icon">refresh</i>
+            </center>
+        </div>
+
+        <div v-if="word" id="word-view">
+            <p>{{ word.explanations.cn.defn }}</p>
+        </div>
+
+        <div v-if="error" id="error-view">
+            <p>{{ error.msg }}</p>
         </div>
     </div>
 
