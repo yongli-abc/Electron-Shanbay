@@ -112,8 +112,8 @@ module.exports = {
             return localStorage.access_token;
         },
         setToken: function(access_token, expired_at) {
-            localStorage.access_token = access_token;
-            localStorage.expired_at = tokenExpired;
+            window.localStorage.access_token = access_token;
+            window.localStorage.expired_at = tokenExpired;
         }
     }
 };

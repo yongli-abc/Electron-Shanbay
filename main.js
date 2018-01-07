@@ -1,7 +1,8 @@
 const {app, BrowserWindow, Menu, Tray, ipcMain} = require("electron");
 const path = require("path");
 const url = require("url");
-const config = require("./config.js");
+const config = require("./config");
+const util = require("./src/js/util");
 
 /*
  * Start in development mode
@@ -67,17 +68,18 @@ function setMessageListener() {
         authWindow.webContents.on("did-get-redirect-request", function(event, oldUrl, newUrl) {
             console.log("get redirect request, event=", event, "oldUrl=", oldUrl, "newUrl=", newUrl);
 
-            var error = RegExp('[?&]error=([^&]*)').exec(newUrl);
-            var token = RegExp('[?&#]token=([^&]*)').exec(newUrl); 
-            var expires_in = RegExp('[?&]expires_in=([^&]*)').exec(newUrl);
+            var errorMatch = RegExp('[?&]error=([^&]*)').exec(newUrl);
+            var tokenMatch = RegExp('[?&#]access_token=([^&]*)').exec(newUrl); 
+            var expiresMatch = RegExp('[?&]expires_in=([^&]*)').exec(newUrl);
 
-            if (error) {
-                indexSender.send("login-error", error);
+            if (errorMatch) {
+                indexSender.send("login-error", errorMatch[1]);
                 closeAuthWindow();
-            } else if (token && expiresIn) {
-                var expired_at = new Date((new Date()).getTime() + expires_in * 1000);
-                localStorage.access_token = token;
-                localStorage.expired_at = expired_at;
+            } else if (tokenMatch && expiresMatch) {
+                var expired_at = new Date((new Date()).getTime() + parseInt(expiresMatch[1]) * 1000);
+                util.user.setToken(tokenMatch[1], expired_at);
+                indexSender.send("login-success");
+                closeAuthWindow();
             }
         });
     

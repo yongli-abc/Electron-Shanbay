@@ -26,6 +26,10 @@ util.loadVueP()
     ipcRenderer.on("login-error", (event, arg) => {
         alert("登录授权失败，请重试。");
     });
+
+    ipcRenderer.on("login-success", () => {
+        alert("登录成功, token=", localStorage.access_token, ", expired_at=", localStorage.expired_at);
+    });
 })
 .then(function() {  // start vue app
     app = new Vue({
@@ -35,7 +39,7 @@ util.loadVueP()
             view: k_view.init,
             word: null,
             error: null,
-            hasLogin: util.hasLogin()
+            hasLogin: util.user.tokenValid()
         },
         methods: {
             onFocus: function() {
