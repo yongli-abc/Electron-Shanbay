@@ -3,7 +3,7 @@ console.log("node_env=", process.env.NODE_ENV);
 
 const path = require("path");
 const util = require(path.join(__dirname, "../js/util.js"));
-const {remote} = require("electron");
+const {remote, BrowserWindow, ipcRenderer} = require("electron");
 
 // fixing electron issue
 window.$ = window.jQuery = require('../js/jquery-3.2.1.min.js');
@@ -23,13 +23,19 @@ let app = null; // global reference to the vue app,
 
 util.loadVueP()
 .then(function() {
+    ipcRenderer.on("login-error", (event, arg) => {
+        alert("登录授权失败，请重试。");
+    });
+})
+.then(function() {  // start vue app
     app = new Vue({
         el: "#app",
         data: {
             searchWord: null,
             view: k_view.init,
             word: null,
-            error: null
+            error: null,
+            hasLogin: util.hasLogin()
         },
         methods: {
             onFocus: function() {
@@ -77,6 +83,12 @@ util.loadVueP()
              */
             onEnter: function() {
                 document.getElementById("search-btn").click();
+            },
+            /*
+             * Login clicked.
+             */
+            onLogin: function() {
+                ipcRenderer.send("login");
             }
         }
     });

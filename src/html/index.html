@@ -14,9 +14,14 @@
 </head>
 <body>
     <div id="app" class="container">
-        <div id="index-banner" clsas="row">
-            <div class="col s12">
+        <div id="index-banner" class="row">
+            <div class="col s10">
                 <h3><center>扇贝桌面版</center></h3>
+            </div>
+            <div class="col s2">
+                <div v-if="!hasLogin">
+                    <a v-on:click="onLogin" href="javascript:;">请登录</a>
+                </div>
             </div>
         </div>
 

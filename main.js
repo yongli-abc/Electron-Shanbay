@@ -1,11 +1,12 @@
-const {app, BrowserWindow, Menu, Tray} = require("electron");
+const {app, BrowserWindow, Menu, Tray, ipcMain} = require("electron");
 const path = require("path");
 const url = require("url");
+const config = require("./config.js");
 
 /*
  * Start in development mode
  */
-// process.env.NODE_ENV = "development"
+process.env.NODE_ENV = "development"
 if (process.env.NODE_ENV !== "development") {
     console.log = function() {}
 }
@@ -15,7 +16,8 @@ if (process.env.NODE_ENV !== "development") {
  */
 const k_winNames = Object.freeze({
     main: "mainWindow",
-    tray: "trayWindow"
+    tray: "trayWindow",
+    login: "loginWindow"
 });
 
 /*
@@ -31,6 +33,63 @@ const k_viewPaths = Object.freeze({
  */
 let wins = {}; // keep global references to windows
 let forceQuit = false;
+
+function setMessageListener() {
+    ipcMain.on("login", (event, arg) => {
+        let indexSender = event.sender;
+        console.log("main.js received login message, arg=", arg);
+        let authWindow = new BrowserWindow({
+            width: 800,
+            height: 600,
+            show: false
+        });
+
+        wins[k_winNames.login] = authWindow;
+
+        function closeAuthWindow() {
+            new Promise(function(res, rej) {
+                authWindow.webContents.session.clearStorageData(res);
+            })
+            .then(function() {
+                console.log("cleared login window cache");
+                authWindow.webContents.clearHistory();
+                authWindow.destroy();
+                wins[k_winNames.login] = null;
+                authWindow = null;
+            });
+        }
+
+        authWindow.on("close", (event) => {
+            event.preventDefault();
+            closeAuthWindow();
+        });
+
+        authWindow.webContents.on("did-get-redirect-request", function(event, oldUrl, newUrl) {
+            console.log("get redirect request, event=", event, "oldUrl=", oldUrl, "newUrl=", newUrl);
+
+            var error = RegExp('[?&]error=([^&]*)').exec(newUrl);
+            var token = RegExp('[?&#]token=([^&]*)').exec(newUrl); 
+            var expires_in = RegExp('[?&]expires_in=([^&]*)').exec(newUrl);
+
+            if (error) {
+                indexSender.send("login-error", error);
+                closeAuthWindow();
+            } else if (token && expiresIn) {
+                var expired_at = new Date((new Date()).getTime() + expires_in * 1000);
+                localStorage.access_token = token;
+                localStorage.expired_at = expired_at;
+            }
+        });
+    
+        let authUrl = config.shanbay.api_root + config.shanbay.auth_url + "?" +
+                      "client_id=" + config.shanbay.client_id +
+                      "&response_type=" + config.shanbay.response_type;
+    
+        console.log("authUrl=", authUrl);
+        authWindow.loadURL(authUrl);
+        authWindow.show();
+    });
+}
 
 /*
  * Create the main window
@@ -238,6 +297,7 @@ function createTray() {
 
 app.on("ready", function() {
     console.log("app received ready");
+    setMessageListener();
     createMainWindow();
     createTray();
 });
