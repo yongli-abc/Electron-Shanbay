@@ -28,7 +28,8 @@ util.loadVueP()
     });
 
     ipcRenderer.on("login-success", () => {
-        alert("登录成功, token=", localStorage.access_token, ", expired_at=", localStorage.expired_at);
+        console.log("登录成功, access_token=", util.user.getToken());
+        console.log("登录成功, expired_at=", util.user.getExpiredAt());
     });
 })
 .then(function() {  // start vue app
@@ -39,7 +40,37 @@ util.loadVueP()
             view: k_view.init,
             word: null,
             error: null,
-            hasLogin: util.user.tokenValid()
+            hasLogin: util.user.tokenValid(),
+            user: null,
+        },
+        /*
+         * When Vue app is mounted and ready
+         */
+        mounted: function() {
+            let that = this;
+            this.$nextTick(function() {
+                if (util.user.tokenValid()) {
+                    util.user.getUserP()
+                    .then(function(user) {
+                        console.log("user data:", user);
+                        that.user = user;
+                        $('.dropdown-button').dropdown({
+                            inDuration: 300,
+                            outDuration: 225,
+                            constrainWidth: false, // Does not change width of dropdown to that of the activator
+                            hover: true, // Activate on hover
+                            gutter: 0, // Spacing from edge
+                            belowOrigin: false, // Displays dropdown below the button
+                            alignment: 'left', // Displays dropdown with edge aligned to the left of button
+                            stopPropagation: false // Stops event propagation
+                          }
+                        );
+                    })
+                    .catch(function(error) {
+                        console.log("error:", error);
+                    });
+                }
+            });
         },
         methods: {
             onFocus: function() {

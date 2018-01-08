@@ -2,6 +2,10 @@
 
 var rp = require("request-promise-native");
 var _ = require("lodash");
+const Store = require("electron-store");
+const config = require("../../config");
+
+const store = new Store();
 
 module.exports = {
      /*
@@ -36,7 +40,7 @@ module.exports = {
     searchWordP: function(word) {
         console.log("in searchWordP, word=", word);
         let options = {
-            url: "https://api.shanbay.com/bdc/search/",
+            url: config.shanbay.api_root + config.shanbay.search_url,
             qs: {
                 word: word
             },
@@ -98,22 +102,44 @@ module.exports = {
     },
     user: {
         tokenValid: function() {
-            return localStorage.access_token !== undefined && !this.tokenExpired();
+            return store.get("access_token") !== undefined && !this.tokenExpired();
         },
         tokenExpired: function() {
-            var expired_at = localStorage.expired_at;
+            var expired_at = store.get("expired_at");
             return expired_at === undefined || new Date(expired_at) < new Date();
         },
         clearToken: function() {
-            delete localStorage.access_token;
-            delete localStorage.expired_at;
+            store.delete("access_token");
+            store.delete("expired_at");
         },
         getToken: function() {
-            return localStorage.access_token;
+            return store.get("access_token");
+        },
+        getExpiredAt: function() {
+            return store.get("expired_at");
         },
         setToken: function(access_token, expired_at) {
-            window.localStorage.access_token = access_token;
-            window.localStorage.expired_at = tokenExpired;
+            store.set("access_token", access_token);
+            store.set("expired_at", expired_at);
+        },
+        getUserP: function() {
+            if (!this.tokenValid()) {
+                return Promise.resolve({
+                    username: null,
+                    nickname: null,
+                    id: null,
+                    avatar: null
+                });
+            } else {
+                let options = {
+                    url: config.shanbay.api_root + config.shanbay.account_url,
+                    qs: {
+                        access_token: this.getToken()
+                    },
+                    json: true
+                }; 
+                return rp(options);
+            }
         }
     }
 };

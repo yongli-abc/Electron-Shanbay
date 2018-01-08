@@ -22,6 +22,22 @@
                 <div v-if="!hasLogin">
                     <a v-on:click="onLogin" href="javascript:;">请登录</a>
                 </div>
+                <div v-else-if="user" id="user-view">
+                    <img v-bind:src="user.avatar" alt="头像错误" width="50px">{{ user.nickname }}
+
+                    <!-- Dropdown Trigger -->
+  <a class='dropdown-button btn' href='#' data-activates='dropdown1'>Drop Me!</a>
+
+  <!-- Dropdown Structure -->
+  <ul id='dropdown1' class='dropdown-content'>
+    <li><a href="#!">one</a></li>
+    <li><a href="#!">two</a></li>
+    <li class="divider"></li>
+    <li><a href="#!">three</a></li>
+    <li><a href="#!"><i class="material-icons">view_module</i>four</a></li>
+    <li><a href="#!"><i class="material-icons">cloud</i>five</a></li>
+  </ul>
+                </div>
             </div>
         </div>
 

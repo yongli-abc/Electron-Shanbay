@@ -3,11 +3,12 @@ const path = require("path");
 const url = require("url");
 const config = require("./config");
 const util = require("./src/js/util");
+const Store = require("electron-store");
 
 /*
  * Start in development mode
  */
-process.env.NODE_ENV = "development"
+process.env.NODE_ENV = "development";
 if (process.env.NODE_ENV !== "development") {
     console.log = function() {}
 }
@@ -34,6 +35,7 @@ const k_viewPaths = Object.freeze({
  */
 let wins = {}; // keep global references to windows
 let forceQuit = false;
+const store = new Store();
 
 function setMessageListener() {
     ipcMain.on("login", (event, arg) => {
@@ -77,6 +79,8 @@ function setMessageListener() {
                 closeAuthWindow();
             } else if (tokenMatch && expiresMatch) {
                 var expired_at = new Date((new Date()).getTime() + parseInt(expiresMatch[1]) * 1000);
+                console.log(tokenMatch[1]);
+                console.log(expired_at);
                 util.user.setToken(tokenMatch[1], expired_at);
                 indexSender.send("login-success");
                 closeAuthWindow();

@@ -10,3 +10,7 @@ span.pos-label {
     display: inline-block;
     padding: 0 0.8em;
 }
+
+div#user-view {
+    text-align: center;
+}
