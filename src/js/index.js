@@ -6,7 +6,8 @@ const util = require(path.join(__dirname, "../js/util.js"));
 const {remote, BrowserWindow, ipcRenderer} = require("electron");
 
 // fixing electron issue
-window.$ = window.jQuery = require('../js/jquery-3.2.1.min.js');
+// window.$ = window.jQuery = require('../js/jquery-3.2.1.min.js');
+    // use jquery 2.2.4 directly in index.html instead
 window.Hammer = require('../js/hammer.min.js');
 
 const k_view = Object.freeze({
@@ -21,6 +22,34 @@ let win = remote.getCurrentWindow();
 let app = null; // global reference to the vue app,
                 // so we can access it from devTool
 
+/*
+ * User just logged in.
+ * Replace the login link with nick name and avatar.
+ */
+function updateLogin() {
+    util.user.getUserP()
+    .then(function(user) {
+        console.log("user data:", user);
+        app.hasLogin = true;
+        app.user = user;
+    })
+    .then(function() {
+        $('.dropdown-button').dropdown({
+            inDuration: 300,
+            outDuration: 225,
+            constrainWidth: false, // Does not change width of dropdown to that of the activator
+            gutter: 0, // Spacing from edge
+            belowOrigin: false, // Displays dropdown below the button
+            alignment: 'left', // Displays dropdown with edge aligned to the left of button
+            stopPropagation: false // Stops event propagation
+          }
+        );
+    })
+    .catch(function(error) {
+        console.log("error:", error);
+    });
+}
+
 util.loadVueP()
 .then(function() {
     ipcRenderer.on("login-error", (event, arg) => {
@@ -28,8 +57,8 @@ util.loadVueP()
     });
 
     ipcRenderer.on("login-success", () => {
-        console.log("登录成功, access_token=", util.user.getToken());
-        console.log("登录成功, expired_at=", util.user.getExpiredAt());
+        console.log("index.js received login-success");
+        updateLogin();
     });
 })
 .then(function() {  // start vue app
@@ -50,25 +79,7 @@ util.loadVueP()
             let that = this;
             this.$nextTick(function() {
                 if (util.user.tokenValid()) {
-                    util.user.getUserP()
-                    .then(function(user) {
-                        console.log("user data:", user);
-                        that.user = user;
-                        $('.dropdown-button').dropdown({
-                            inDuration: 300,
-                            outDuration: 225,
-                            constrainWidth: false, // Does not change width of dropdown to that of the activator
-                            hover: true, // Activate on hover
-                            gutter: 0, // Spacing from edge
-                            belowOrigin: false, // Displays dropdown below the button
-                            alignment: 'left', // Displays dropdown with edge aligned to the left of button
-                            stopPropagation: false // Stops event propagation
-                          }
-                        );
-                    })
-                    .catch(function(error) {
-                        console.log("error:", error);
-                    });
+                   updateLogin();
                 }
             });
         },
@@ -124,6 +135,14 @@ util.loadVueP()
              */
             onLogin: function() {
                 ipcRenderer.send("login");
+            },
+            /*
+             * User logout.
+             */
+            onLogout: function() {
+                util.user.clearToken();
+                this.hasLogin = false;
+                this.user = null;
             }
         }
     });

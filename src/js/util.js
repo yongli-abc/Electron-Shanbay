@@ -48,7 +48,7 @@ module.exports = {
         };
 
         console.log("Request options: ", options);
-
+v
         return rp(options)
         .then(function(res) {
             if (res.hasOwnProperty("status_code") &&

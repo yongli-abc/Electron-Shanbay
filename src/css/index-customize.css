@@ -13,4 +13,9 @@ span.pos-label {
 
 div#user-view {
     text-align: center;
+    
+}
+
+div#login-link {
+    padding-top: 2em;
 }

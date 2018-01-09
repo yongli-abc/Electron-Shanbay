@@ -18,25 +18,19 @@
             <div class="col s10">
                 <h3><center>扇贝桌面版</center></h3>
             </div>
-            <div class="col s2">
-                <div v-if="!hasLogin">
+            <div class="col s2" id="user-view">
+                <div v-if="!hasLogin" id="login-link">
                     <a v-on:click="onLogin" href="javascript:;">请登录</a>
                 </div>
-                <div v-else-if="user" id="user-view">
-                    <img v-bind:src="user.avatar" alt="头像错误" width="50px">{{ user.nickname }}
-
+                <div v-else-if="user">
+                    <img v-bind:src="user.avatar" alt="头像错误" width="50px">
                     <!-- Dropdown Trigger -->
-  <a class='dropdown-button btn' href='#' data-activates='dropdown1'>Drop Me!</a>
+                    <a class='dropdown-button' href='#' data-activates='dropdown1'>{{ user.nickname }}</a>
 
-  <!-- Dropdown Structure -->
-  <ul id='dropdown1' class='dropdown-content'>
-    <li><a href="#!">one</a></li>
-    <li><a href="#!">two</a></li>
-    <li class="divider"></li>
-    <li><a href="#!">three</a></li>
-    <li><a href="#!"><i class="material-icons">view_module</i>four</a></li>
-    <li><a href="#!"><i class="material-icons">cloud</i>five</a></li>
-  </ul>
+                    <!-- Dropdown Structure -->
+                    <ul id='dropdown1' class='dropdown-content'>
+                        <li><a href="#!" v-on:click="onLogout">退出</a></li>
+                    </ul>
                 </div>
             </div>
         </div>
@@ -161,6 +155,10 @@
             </div>
         </div>
     </div>
+    <script
+    src="https://code.jquery.com/jquery-2.2.4.min.js"
+    integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44="
+    crossorigin="anonymous"></script>
     <script src="../js/index.js"></script>
     <script src="../js/materialize.min.js"></script>
 </body>
