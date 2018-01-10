@@ -143,6 +143,19 @@ util.loadVueP()
                 util.user.clearToken();
                 this.hasLogin = false;
                 this.user = null;
+            },
+            /*
+             * User clicked add word button.
+             */
+            addWord: function() {
+                console.log("add word button clicked");
+                util.addWordP(this.word.id)
+                .then(function(learning_id) {
+                    app.word.learning_id = learning_id;
+                })
+                .catch(function(error) {
+                    alert(error);
+                });
             }
         }
     });

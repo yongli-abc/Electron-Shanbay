@@ -11,6 +11,7 @@ config.shanbay = {
     call_back:          "https://api.shanbay.com/oauth2/auth/success/",
     account_url:        "/account/",
     search_url:         "/bdc/search/",
+    add_word_url:       "/bdc/learning/"
 };
 
 module.exports = config;

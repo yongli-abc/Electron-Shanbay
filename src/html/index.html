@@ -71,13 +71,21 @@
             <div id="word-view" v-if="view==='wordView'">
                 <!-- Word -->
                 <div class="row">
-                    <div class="col s12">
+                    <div class="col s8">
                         <span>
                             <font size="6">{{ word.content }}</font>
                             <!-- <h4>  </h4> -->
                         </span>
                         <span>{{ word.pronunciations.uk }}</span>
                         <span>{{ word.pronunciations.us }}</span>
+                    </div>
+                    <div class="col s4" v-if="hasLogin">
+                        <a class="btn-floating btn-large waves-effect waves-light yellow" v-if="word.learning_id">
+                            <i class="material-icons">star</i>
+                        </a>
+                        <a class="btn-floating btn-large waves-effect waves-light" v-if="!word.learning_id" v-on:click="addWord">
+                            <i class="material-icons">add</i>
+                        </a>
                     </div>
                 </div>
     

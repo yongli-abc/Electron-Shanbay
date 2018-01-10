@@ -47,14 +47,22 @@ module.exports = {
             json: true
         };
 
+        if (this.user.tokenValid()) {
+            options.qs.access_token = this.user.getToken();
+        }
+
         console.log("Request options: ", options);
-v
+
         return rp(options)
         .then(function(res) {
+            console.log(res);
             if (res.hasOwnProperty("status_code") &&
                 res.status_code === 0) {
                 
                 let data = {};
+                _.set(data, "id",
+                    _.get(res, "data.id"));
+                
                 _.set(data, "content",
                       _.get(res, "data.content"));
                 
@@ -70,17 +78,13 @@ v
                 _.set(data, "explanations.en",
                       _.get(res, "data.en_definitions"));
 
+                _.set(data, "learning_id",
+                      _.get(res, "data.learning_id"));
+
                 return data;
 
             } else {
-                let error = {};
-                _.set(error, "status_code",
-                    _.get(res, "status_code", "unknown status code"));
-
-                _.set(error, "msg",
-                    _.get(res, "msg", "unknown msg"));
-
-                throw error;
+                throw res;
             }
         });
     },
@@ -141,5 +145,37 @@ v
                 return rp(options);
             }
         }
+    },
+    /*
+     * Add a word to user's learning notebook.
+     * @param {String} word The word id to add.
+     * @return {Promise} promise
+     * @return {Number} promise.resolve The added learning id.
+     */
+    addWordP: function(id) {
+        let options = {
+            method: "POST",
+            url: config.shanbay.api_root + config.shanbay.add_word_url,
+            body: {
+                id: id
+            },
+            qs: {
+                access_token: this.user.getToken()
+            },
+            json: true
+        };
+
+        return rp(options)
+        .then(function(res) {
+            console.log(res);
+            if (res.hasOwnProperty("status_code") &&
+                res.status_code === 0) {
+                
+                return _.get(res, "data.id");
+
+            } else {
+                throw res;
+            }
+        });
     }
 };
