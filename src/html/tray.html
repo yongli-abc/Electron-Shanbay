@@ -14,24 +14,33 @@
 </head>
 <body class="#ffffff white">
     <div id="app" class="container" @keyup.esc="onEsc">
-        <div class="input-field" id="search-bar" novalidate>
-            <input placeholder="输入……" type="text" id="search-input"
-                   @keyup.enter="onSearch" v-model:value="searchWord"
-                   class="validate">
+        <div class="row">
+            <div class="input-field col s10" id="search-bar" novalidate>
+                <input placeholder="输入……" type="text" id="search-input"
+                       @keyup.enter="onSearch" v-model:value="searchWord"
+                       class="validate">
+            </div>
+            <div class="col s2">
+                <center>
+                    <i class="small material-icons">add</i>
+                </center>
+            </div>
         </div>
 
-        <div v-if="load" id="load-view">
-            <center>
-                <i class="material-icons spin" id="refresh-icon">refresh</i>
-            </center>
-        </div>
-
-        <div v-if="word" id="word-view">
-            <p>{{ word.explanations.cn.defn }}</p>
-        </div>
-
-        <div v-if="error" id="error-view">
-            <p>{{ error.msg }}</p>
+        <div class="row">
+            <div v-if="load" id="load-view" class="col s12">
+                <center>
+                    <i class="material-icons spin" id="refresh-icon">refresh</i>
+                </center>
+            </div>
+    
+            <div v-if="word" id="word-view" class="col s12">
+                <p>{{ word.explanations.cn.defn }}</p>
+            </div>
+    
+            <div v-if="error" id="error-view" class="col s12">
+                <p>{{ error.msg }}</p>
+            </div>
         </div>
     </div>
 
