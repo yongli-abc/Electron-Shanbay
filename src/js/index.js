@@ -27,6 +27,8 @@ let app = null; // global reference to the vue app,
  * Replace the login link with nick name and avatar.
  */
 function updateLogin() {
+    app.hasLogin = true;
+    
     util.user.getUserP()
     .then(function(user) {
         console.log("user data:", user);
@@ -69,7 +71,7 @@ util.loadVueP()
             view: k_view.init,
             word: null,
             error: null,
-            hasLogin: util.user.tokenValid(),
+            hasLogin: null,
             user: null,
         },
         /*
@@ -79,7 +81,7 @@ util.loadVueP()
             let that = this;
             this.$nextTick(function() {
                 if (util.user.tokenValid()) {
-                   updateLogin();
+                    updateLogin();
                 }
             });
         },
@@ -141,8 +143,8 @@ util.loadVueP()
              */
             onLogout: function() {
                 util.user.clearToken();
-                this.hasLogin = false;
-                this.user = null;
+                app.hasLogin = false;
+                app.user = null;
             },
             /*
              * User clicked add word button.

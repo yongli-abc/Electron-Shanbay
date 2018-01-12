@@ -20,10 +20,9 @@
                        @keyup.enter="onSearch" v-model:value="searchWord"
                        class="validate">
             </div>
-            <div class="col s2">
-                <center>
-                    <i class="small material-icons">add</i>
-                </center>
+            <div class="col s2" v-if="hasLogin" id="addWord">
+                    <i class="small material-icons" v-if="word && word.learning_id">star</i>
+                    <i class="small material-icons" v-if="word && !word.learning_id" v-on:click="addWord">add</i>
             </div>
         </div>
 

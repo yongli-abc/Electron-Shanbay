@@ -30,3 +30,8 @@ i.spin {
     from {transform:rotate(0deg);}
     to {transform:rotate(360deg);}
 }
+
+div#addWord {
+    margin-top: 5px;
+    text-align: center;
+}

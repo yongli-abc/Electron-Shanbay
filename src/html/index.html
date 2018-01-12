@@ -14,7 +14,7 @@
 </head>
 <body>
     <div id="app" class="container">
-        <div id="index-banner" class="row">
+        <div id="index-banner" class="row section">
             <div class="col s10">
                 <h3><center>扇贝桌面版</center></h3>
             </div>
@@ -23,7 +23,7 @@
                     <a v-on:click="onLogin" href="javascript:;">请登录</a>
                 </div>
                 <div v-else-if="user">
-                    <img v-bind:src="user.avatar" alt="头像错误" width="50px">
+                    <img v-bind:src="user.avatar" alt="头像错误" width="50px"> <br>
                     <!-- Dropdown Trigger -->
                     <a class='dropdown-button' href='#' data-activates='dropdown1'>{{ user.nickname }}</a>
 
@@ -68,6 +68,7 @@
             </div>
     
             <!-- Word can be successfully found -->
+
             <div id="word-view" v-if="view==='wordView'">
                 <!-- Word -->
                 <div class="row">

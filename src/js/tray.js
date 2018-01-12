@@ -19,6 +19,15 @@ function updateWinSize() {
 }
 
 let app = null;
+
+win.on("show", function() {
+    if (util.user.tokenValid()) {
+        app.hasLogin = true;
+    } else {
+        app.hasLogin = false;
+    }
+});
+
 util.loadVueP()
 .then(function() {
     app = new Vue({
@@ -27,7 +36,15 @@ util.loadVueP()
             searchWord: null,
             word: null,
             error: null,
-            load: false
+            load: false,
+            hasLogin: null,
+        },
+        mounted: function() {
+            this.$nextTick(function() {
+                if (util.user.tokenValid()) {
+                    app.hasLogin = true;
+                }
+            });
         },
         methods: {
             /*
@@ -74,6 +91,19 @@ util.loadVueP()
              */
             onEsc: function() {
                 win.hide();
+            },
+            /*
+             * User click the add button.
+             */
+            addWord: function() {
+                console.log("add word button clicked");
+                util.addWordP(this.word.id)
+                .then(function(learning_id) {
+                    app.word.learning_id = learning_id;
+                })
+                .catch(function(error) {
+                    alert(error);
+                });
             }
         },
         watch: {
