@@ -25,7 +25,7 @@
 # 安装下载 🛠
 
 ### MacOS
-  [github release](https://github.com/NeilLi1992/Electron-Shanbay/releases/download/0.1/electron-shanbay-darwin-x64.zip)
+  [github release](https://github.com/NeilLi1992/Electron-Shanbay/releases/download/1.0/electron-shanbay-darwin-x64.zip)
 
   [百度网盘](https://pan.baidu.com/s/1eT5gVGe)
 
