@@ -109,10 +109,13 @@ function createMainWindow() {
     });
     let win = wins[k_winNames.main];
 
+    win.setFullScreenable(false);
+
     // don't close the window, unless it's forced to quit
     // e.g. cmd+q / ctrl+q
     win.on("close", (e) => {
         console.log("main window received close");
+
         if (!forceQuit) {
             e.preventDefault();
             win.hide();

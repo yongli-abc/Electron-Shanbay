@@ -84,6 +84,15 @@ util.loadVueP()
                     updateLogin();
                 }
             });
+
+            window.onkeydown = function(e) {
+                if (e.which === 27) { // esc
+                    console.log("window received key down esc");
+                    if (win.isFullScreen()) {
+                        win.setFullScreen(false);
+                    }
+                }
+            }
         },
         methods: {
             onFocus: function() {
